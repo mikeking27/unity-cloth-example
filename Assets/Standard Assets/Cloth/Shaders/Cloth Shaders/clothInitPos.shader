@@ -34,10 +34,9 @@ Shader "clothInitPos" {
 			{
 				//Generate a regular grid by scaling uv coords by the number of verts and adding the position
 				//offset
-				float2 scaledUV = fromVert.uv*_posTexSize*_posOffset;
+				//float2 scaledUV = fromVert.uv*_posTexSize*_posOffset;
 				//return float4(scaledUV.x , 0.0f , scaledUV.y , 1.0f);  //Grid in the y=0 plane. Alpha unused.
 				return float4(fromVert.uv.x , 0.0f , fromVert.uv.y , 1.0f);
-				//return float4(1 , 1 , 1 , 1);
 			}
 			ENDCG
 		}

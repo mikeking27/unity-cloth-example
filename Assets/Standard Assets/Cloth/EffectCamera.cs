@@ -4,9 +4,11 @@ using System.Collections;
 public class EffectCamera : MonoBehaviour {
 	public Vector2 dimensions;
 	public Camera cam;
+	public RenderTexture renderTexture;
 	
 	// Use this for initialization
 	void Start () {
+		int dummy = 0;
 	}
 	
 	// Update is called once per frame

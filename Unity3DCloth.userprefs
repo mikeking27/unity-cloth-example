@@ -1,8 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Cloth\EffectScreenQuad.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Cloth\EffectCamera.cs">
     <Files>
-      <File FileName="Assets\Standard Assets\Cloth\EffectScreenQuad.cs" Line="14" Column="30" />
+      <File FileName="Assets\Standard Assets\Cloth\EffectScreenQuad.cs" Line="12" Column="18" />
+      <File FileName="Assets\Standard Assets\Cloth\EffectCamera.cs" Line="25" Column="7" />
+      <File FileName="Assets\Standard Assets\Cloth\Shaders\Cloth Shaders\clothInitPos.shader" Line="27" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

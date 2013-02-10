@@ -15,9 +15,9 @@ public class EffectScreenQuad : MonoBehaviour
         int[] triangles 	= new int[6];
 		
 		//Create plane vertices that fill a dimensions.x*dimension.y pixels rect
-		Vector3 lowerLeftPlaneScreenPos	= new Vector3(0,0,0);
-		Vector3 lowerRightPlaneScreenPos= new Vector3(dimensions.x , 0 , 0);
-		Vector3 upperLeftPlaneScreenPos = new Vector3(0 , dimensions.y , 0);
+		Vector3 lowerLeftPlaneScreenPos	= new Vector3(0 , 0 , 3);
+		Vector3 lowerRightPlaneScreenPos= new Vector3(dimensions.x , 0 , 3);
+		Vector3 upperLeftPlaneScreenPos = new Vector3(0 , dimensions.y , 3);
 		
 		Vector3 lowerLeftPlaneWorldPos  = cam.ScreenToWorldPoint(lowerLeftPlaneScreenPos);
 		Vector3 lowerRightPlaneWorldPos = cam.ScreenToWorldPoint(lowerRightPlaneScreenPos);
