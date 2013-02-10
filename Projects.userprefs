@@ -1,0 +1,18 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Cloth\EffectScreenQuad.cs">
+    <Files>
+      <File FileName="Assets\Standard Assets\Cloth\EffectCamera.cs" Line="22" Column="17" />
+      <File FileName="Assets\Standard Assets\Cloth\EffectScreenQuad.cs" Line="32" Column="38" />
+      <File FileName="Assets\Standard Assets\Cloth\Shaders\Cloth Shaders\clothInitPos.shader" Line="40" Column="22" />
+      <File FileName="Assets\Standard Assets\Cloth\Shaders\Cloth Shaders\clothInitSprings.shader" Line="20" Column="22" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="E:\GameDevelopment\Unity3D\Projects\Assets\Render.cs" line="34" />
+      <Breakpoint file="E:\GameDevelopment\Unity3D\Projects\Assets\Standard Assets\Cloth\EffectCamera.cs" line="23" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
