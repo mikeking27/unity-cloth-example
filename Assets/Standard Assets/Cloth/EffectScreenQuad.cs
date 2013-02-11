@@ -15,21 +15,25 @@ public class EffectScreenQuad : MonoBehaviour
         int[] triangles 	= new int[6];
 		
 		//Create plane vertices that fill a dimensions.x*dimension.y pixels rect
-		Vector3 lowerLeftPlaneScreenPos	= new Vector3(0 , 0 , 3);
-		Vector3 lowerRightPlaneScreenPos= new Vector3(dimensions.x , 0 , 3);
-		Vector3 upperLeftPlaneScreenPos = new Vector3(0 , dimensions.y , 3);
+		Vector3 lowerLeftPlaneScreenPos	= new Vector3(0 , 0 , 0);
+		Vector3 lowerRightPlaneScreenPos= new Vector3(dimensions.x , 0 , 0);
+		Vector3 upperLeftPlaneScreenPos = new Vector3(0 , dimensions.y , 0);
 		
 		Vector3 lowerLeftPlaneWorldPos  = cam.ScreenToWorldPoint(lowerLeftPlaneScreenPos);
 		Vector3 lowerRightPlaneWorldPos = cam.ScreenToWorldPoint(lowerRightPlaneScreenPos);
 		Vector3 upperLeftPlaneWorldPos = cam.ScreenToWorldPoint(upperLeftPlaneScreenPos);
+		Vector3 heightDelta = (upperLeftPlaneWorldPos - lowerLeftPlaneWorldPos)/2;
+		Vector3 widthDelta = (lowerRightPlaneWorldPos - lowerLeftPlaneWorldPos)/2;
 		
         vertices[0] = lowerLeftPlaneWorldPos;
         vertices[1] = lowerRightPlaneWorldPos;
         vertices[2] = upperLeftPlaneWorldPos;
-        vertices[3] = upperLeftPlaneWorldPos + lowerRightPlaneWorldPos;
-
+        vertices[3] = heightDelta + widthDelta;
+		
+		Vector3 normal = Vector3.Cross(widthDelta , heightDelta);
+		normal.Normalize();
         for (int i = 0; i < 4; i++)
-            normals[i] = Vector3.back;
+            normals[i] = normal;
 
         uv[0] = Vector2.zero;
         uv[1] = Vector2.right;
@@ -37,9 +41,9 @@ public class EffectScreenQuad : MonoBehaviour
         uv[3] = Vector2.right + Vector2.up;
         
         triangles[0] = 0;
-        triangles[1] = 1;
-        triangles[2] = 2;
-        triangles[3] = 0;
+        triangles[1] = 2;
+        triangles[2] = 1;
+        triangles[3] = 1;
         triangles[4] = 2;
         triangles[5] = 3;
 

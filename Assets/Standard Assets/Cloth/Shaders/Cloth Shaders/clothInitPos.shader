@@ -26,7 +26,10 @@ Shader "clothInitPos" {
 			
 			v2f vert(v2f IN)
 			{
-				v2f toFrag = IN;
+				v2f toFrag;
+				toFrag.pos = mul(UNITY_MATRIX_MVP, IN.pos);
+				toFrag.uv = IN.uv;
+				
 				return toFrag;
 			}
 			

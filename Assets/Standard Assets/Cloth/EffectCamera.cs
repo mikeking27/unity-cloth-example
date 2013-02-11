@@ -8,7 +8,7 @@ public class EffectCamera : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		int dummy = 0;
+		//int dummy = 0;
 	}
 	
 	// Update is called once per frame
