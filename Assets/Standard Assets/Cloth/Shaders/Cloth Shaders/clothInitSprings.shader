@@ -27,6 +27,7 @@ Shader "clothInitSprings" {
 			uniform int connectionRings = 2;
 			uniform float stiffnes = 0.5f;
 			uniform float natLenght = 3.0f;
+			uniform float epsilon = 1e-10;
 			
 			struct v2f {
 				float4 pos:POSITION;
@@ -35,67 +36,76 @@ Shader "clothInitSprings" {
 			
 			v2f vert(v2f IN)
 			{
-				v2f toFrag = IN;
+				v2f toFrag;
+				toFrag.pos = mul(UNITY_MATRIX_MVP , IN.pos);
+				toFrag.uv = IN.uv;
 				return toFrag;
 			}
 			
-			//Actually calculates the spring connection entry.
-			
-			float4 computeSpringConnection(int vertexRow , int vertexCol , int subTextureRow ,
-				int subTextureCol , int posTexSize , int _subTexSize , float natLenght , float stiffnes)
+			//Actually calculates the spring connection entry. All float parameters are supposed to
+			//be scaled to [0,1] range.
+			float4 computeSpringConnection(float vertexRow , float vertexCol , float subTextureRow ,
+				float subTextureCol , int posTexSize , int _subTexSize , float natLenght ,
+				float stiffnes)
 			{
-				int conRing = subTextureRow/2;
+				//float conRing = subTextureRow*0.5f;
 				
-				if(conRing < connectionRings) //Just add entries for the required number of connection rings
-				{
-					//Each vertex ring has 8 vertices max. In this code we have 4 possibilities for each
-					//iSign, giving all 8 possibilities. For conRing k=[0,1], the connection entries are:
+				//if(conRing < 0.5 + epsilon) //Add entry if its associaded vertex ring is allowed
+				//{
+					//Each vertex ring has 8 vertices max. The code bellow have 4 possibilities for each
+					//iSign, giving all 8 possibilities. For conRing k=0 || k = 1, the connection entries
+					//are:
 					//-------------------------------------
-					//|Entries for k-1                    |
+					//|Entries for k-1, if applicable     |
 					//-------------------------------------
 					//|(i+k,j)|(i+k,j+k)|(i,j+k)|(i-k,j+k)|
 					//|(i-k,j)|(i-k,j-k)|(i,j-k)|(i+k,j-k)|
 					//-------------------------------------
+					//|Entries for k+1, if applicable     |
+					//-------------------------------------
+					//
+					//Values are scaled to [0,1]
 					
-					int springEndRow;
-					int springEndCol;
-					int iSign = (subTextureRow%2 == 0) ? 1 : -1;
+					//float springEndRow;
+					//float springEndCol;
 					
-					if(subTextureCol == 0)
-					{
-						springEndRow = vertexRow + iSign*conRing; 
-						springEndCol = vertexCol;
-					}
-					else if(subTextureCol == 1)
-					{
-						springEndRow = vertexRow + iSign*conRing; 
-						springEndCol = vertexCol + iSign*conRing;
-					}
-					else if(subTextureCol == 2)
-					{
-						springEndRow = vertexRow; 
-						springEndCol = vertexCol + iSign*conRing;
-					}
-					else if(subTextureCol == 3)
-					{
-						springEndRow = vertexRow - iSign*conRing; 
-						springEndCol = vertexCol + iSign*conRing;
-					}
+					//float iSign = (subTextureRow - conRing*0.5 > 0.25 +- epsilon) ? 1 : -1;
 					
-					if(springEndRow > -1 && springEndRow < posTexSize && springEndCol > -1 &&
-						springEndCol < posTexSize) //Check for position texture bounds
-					{
-						return float4((float)springEndRow , (float)springEndCol , natLenght , stiffnes);
-					}
-					else
-					{
-						return float4(-1.0f , -1.0f , -1.0f , -1.0f);
-					}
-				}
-				else
-				{
+					//if(subTextureCol == 0)
+					//{
+					//	springEndRow = vertexRow + iSign*conRing; 
+					//	springEndCol = vertexCol;
+					//}
+					//else if(subTextureCol == 1)
+					//{
+					//	springEndRow = vertexRow + iSign*conRing; 
+					//	springEndCol = vertexCol + iSign*conRing;
+					//}
+					//else if(subTextureCol == 2)
+					//{
+					//	springEndRow = vertexRow; 
+					//	springEndCol = vertexCol + iSign*conRing;
+					//}
+					//else if(subTextureCol == 3)
+					//{
+					//	springEndRow = vertexRow - iSign*conRing; 
+					//	springEndCol = vertexCol + iSign*conRing;
+					//}
+					
+					//if(springEndRow > -1 && springEndRow < posTexSize && springEndCol > -1 &&
+					//	springEndCol < posTexSize) //Check for position texture bounds
+					//{
+					//	return float4((float)springEndRow , (float)springEndCol , natLenght , stiffnes);
+					//}
+					//else
+					//{
+					//	return float4(-1.0f , -1.0f , -1.0f , -1.0f);
+					//}
+				//}
+				//else
+				//{
 					return float4(-1.0f , -1.0f , -1.0f , -1.0f);
-				}
+				//}
 			}
 	
 			float4 frag(v2f fromVert):COLOR
@@ -103,16 +113,26 @@ Shader "clothInitSprings" {
 				int springTexSize = _subTexSize*_posTexSize;
 			
 				//First, verifies which vertex subtexture the fragment shader is processing
-				int vertexI = floor(fromVert.uv.x*_subTexSize); 
-				int vertexJ = floor(fromVert.uv.y*_subTexSize);
+				//(scaled to [0,1] range)
+				float invSpringTexSize = 1f/(_subTexSize*_posTexSize);
+				float subTexSizeScaled = _subTexSize*invSpringTexSize;
+				float vertexINoScale = floor(fromVert.uv.x/subTexSizeScaled);
+				float vertexJNoScale = floor(fromVert.uv.y/subTexSizeScaled);
+				
+				float vertexI = vertexINoScale/_posTexSize; 
+				float vertexJ = vertexJNoScale/_posTexSize;
 				
 				//Second, verifies which entry in the subtexture the fragment shader is processing.
-				//Redundant computation just be cleaner...
-				int conEntryI = int(floor(fromVert.uv.x*_subTexSize*_posTexSize))%_subTexSize; 
-				int conEntryJ = int(floor(fromVert.uv.y*_subTexSize*_posTexSize))%_subTexSize;
+				//Scale is not really necessary in the final result here, since the subtraction is
+				//always less than 1f. Nevertheless, it is done to be more generic in latter coding
+				float conEntryI = (fromVert.uv.x - vertexINoScale*subTexSizeScaled)/subTexSizeScaled;
+				float conEntryJ = (fromVert.uv.y - vertexJNoScale*subTexSizeScaled)/subTexSizeScaled;
 				
+				//Third, compute the connection entry and return the pixel with data
 				return computeSpringConnection(vertexI , vertexJ , conEntryI , conEntryJ , _posTexSize ,
 					_subTexSize , natLenght , stiffnes);
+				
+				//return float4(vertexI , vertexJ , conEntryI , conEntryJ);
 			}
 			ENDCG
 		}

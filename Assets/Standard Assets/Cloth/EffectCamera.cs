@@ -8,12 +8,25 @@ public class EffectCamera : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		//int dummy = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+	
+	public void changeRenderTexture(RenderTexture renderTex , Vector2 dim)
+	{
+		dimensions = dim;
+		changeRenderTexture (renderTex);
+		cam.orthographicSize = dim.x/2;
+	}
+	
+	public void changeRenderTexture(RenderTexture renderTex)
+	{
+		renderTexture = renderTex;
+		cam.targetTexture = renderTex;
+		RenderTexture.active = renderTex;
 	}
 	
 	void OnRenderImage(RenderTexture src , RenderTexture dst)
